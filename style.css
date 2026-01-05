@@ -1362,3 +1362,58 @@ footer {
   background: var(--primary-dark);
   color: #fff;
 }
+/* ================== VARIETY MODAL SCROLL FIX (CORRECT) ================== */
+
+/* Limit modal height */
+#vegModal .modal-content {
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scroll the VARIETY LIST (not card content) */
+#vegTypes,
+.variety-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 12px;
+  scroll-behavior: smooth;
+}
+
+/* Cinematic scrollbar */
+#vegTypes::-webkit-scrollbar,
+.variety-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+#vegTypes::-webkit-scrollbar-track,
+.variety-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#vegTypes::-webkit-scrollbar-thumb,
+.variety-container::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(46, 125, 50, 0.6),
+    rgba(255, 203, 5, 0.6)
+  );
+}
+
+#vegTypes::-webkit-scrollbar-thumb:hover,
+.variety-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(46, 125, 50, 0.9),
+    rgba(255, 203, 5, 0.9)
+  );
+}
+
+/* Firefox */
+#vegTypes,
+.variety-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46,125,50,0.7) transparent;
+}
