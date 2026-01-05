@@ -31,8 +31,9 @@
 
     <div class="nav-icons">
       <i class="fas fa-search"></i>
-      <i class="fas fa-user"></i>
-      <i class="fas fa-shopping-cart"></i>
+      <i class="fas fa-user" title="Login / Account"></i>
+      <i class="fas fa-shopping-cart" onclick="location.href='cart.html'"></i>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
   </div>
 </header>
@@ -104,20 +105,16 @@
     <button class="learn-more-btn">Search</button>
   </div>
 </div>
+<script
+  async
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_c3VwZXJiLXRvYWQtNzAuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@4/dist/clerk.browser.js">
+</script>
 
-<div id="loginModal" class="modal">
-  <div class="modal-content">
-    <button class="close-btn">&times;</button>
-    <h2>Account Login</h2>
-    <form id="loginForm">
-      <label>Email</label>
-      <input type="email" placeholder="you@example.com" required />
-      <label>Password</label>
-      <input type="password" placeholder="Enter password" required />
-      <button type="submit" class="learn-more-btn">Login</button>
-    </form>
-  </div>
-</div>
+
+
+
 
 <script src="script.js"></script>
 </body>

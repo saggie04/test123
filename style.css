@@ -726,3 +726,639 @@ footer {
   color: #000;
   transform: translateY(-4px) scale(1.04);
 }
+/* ===== Minor polish for KG input + Add to Cart ===== */
+
+.kg-input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1.5px solid #d5d5d5;
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.kg-input::placeholder {
+  color: #9a9a9a;
+  font-size: 0.9rem;
+}
+
+.kg-input:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+}
+
+/* Button refinement */
+.variety-card .learn-more-btn {
+  padding: 0.7rem 1.2rem;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  border: none;
+  box-shadow: 0 6px 14px rgba(46, 125, 50, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.variety-card .learn-more-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(46, 125, 50, 0.4);
+}
+
+.variety-card .learn-more-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 12px rgba(46, 125, 50, 0.35);
+}
+/* ================= CART SECTION POLISH ================= */
+
+/* Section spacing */
+.products.container {
+  padding-bottom: 4rem;
+}
+
+/* Cart heading underline alignment */
+.products.container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Table layout */
+.cart-table {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+/* Header */
+.cart-table thead th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+  padding-bottom: 0.8rem;
+  text-align: center;
+  border-bottom: 2px solid #e3e3e3;
+}
+
+/* Row */
+.cart-table tbody tr {
+  border-bottom: 1px solid #ececec;
+}
+
+.cart-table tbody td {
+  padding: 0.9rem 0.6rem;
+  font-size: 0.95rem;
+  color: #333;
+  vertical-align: middle;
+}
+
+/* Product + Variety spacing */
+.cart-table td:first-child {
+  font-weight: 600;
+  color: #1e4d2b;
+}
+
+.cart-table td:nth-child(2) {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* KG input */
+.cart-table input[type="number"] {
+  width: 90px;
+  padding: 0.45rem;
+  border-radius: 8px;
+  border: 1.4px solid #d0d0d0;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.cart-table input[type="number"]:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+/* Remove button */
+.cart-table button {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #e53935;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.cart-table button:hover {
+  transform: scale(1.15);
+  color: #c62828;
+}
+
+/* Empty cart message */
+#emptyCartMsg {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
+  margin-top: 2rem;
+}
+
+/* ================= WHATSAPP CTA ================= */
+
+.cart-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #25d366, #1ebe57);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 2.4rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(37, 211, 102, 0.55);
+}
+
+.whatsapp-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(37, 211, 102, 0.45);
+}
+/* ======================================================
+   GLOBAL MOTION & REALISM LAYER
+   Safe final enhancement – NO HTML / JS changes needed
+====================================================== */
+
+/* ----- GLOBAL SMOOTHNESS ----- */
+* {
+  transition: background-color 0.35s ease,
+              color 0.35s ease,
+              border-color 0.35s ease;
+}
+
+/* Soft page float on load */
+body {
+  animation: pageLift 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pageLift {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----- SECTION FLOAT ON SCROLL (PASSIVE) ----- */
+.products,
+.about-section,
+.contact-grid,
+.hero-content {
+  animation: sectionFloat 6s ease-in-out infinite alternate;
+}
+
+@keyframes sectionFloat {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+/* ======================================================
+   HEADER & NAV MICRO-INTERACTIONS
+====================================================== */
+
+header {
+  transition: box-shadow 0.4s ease, background 0.4s ease;
+}
+
+header:hover {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.nav-links a {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.nav-links a:hover {
+  transform: translateY(-2px);
+}
+
+.nav-icons i {
+  transform-origin: center;
+}
+
+.nav-icons i:hover {
+  transform: translateY(-4px) scale(1.2) rotate(-4deg);
+}
+
+/* ======================================================
+   HERO REFINEMENT
+====================================================== */
+
+.hero::after {
+  animation: heroOverlayPulse 10s ease-in-out infinite alternate;
+}
+
+@keyframes heroOverlayPulse {
+  from { opacity: 0.55; }
+  to   { opacity: 0.35; }
+}
+
+.hero-content h1 {
+  text-shadow: 0 10px 35px rgba(0,0,0,0.45);
+}
+
+/* ======================================================
+   PRODUCT CARDS – REALISTIC LIFT EFFECT
+====================================================== */
+
+.product-card {
+  transform-origin: center bottom;
+}
+
+.product-card:hover {
+  transform:
+    translateY(-10px)
+    scale(1.03);
+}
+
+/* Shadow glide */
+.product-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 15px -10px 15px;
+  height: 12px;
+  background: radial-gradient(ellipse at center,
+    rgba(0,0,0,0.2) 0%,
+    transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.product-card:hover::after {
+  opacity: 1;
+}
+
+/* ======================================================
+   VARIETY CARDS – PREMIUM HOVER DEPTH
+====================================================== */
+
+.variety-card {
+  will-change: transform;
+}
+
+.variety-card:hover {
+  transform:
+    translateY(-10px)
+    scale(1.05);
+}
+
+/* Subtle glow on hover */
+.variety-card:hover {
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.18),
+    0 0 0 1px rgba(46,125,50,0.2);
+}
+
+/* Image micro zoom */
+.variety-card img {
+  transition: transform 0.5s ease;
+}
+
+.variety-card:hover img {
+  transform: scale(1.06);
+}
+
+/* ======================================================
+   INPUTS – REALISTIC FOCUS FEEL
+====================================================== */
+
+input,
+textarea {
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+input:focus,
+textarea:focus {
+  transform: translateY(-1px);
+}
+
+/* ======================================================
+   BUTTON SYSTEM – REAL PRESS FEEDBACK
+====================================================== */
+
+.learn-more-btn,
+.whatsapp-btn,
+.contact-form button {
+  position: relative;
+}
+
+.learn-more-btn::after,
+.whatsapp-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25);
+  opacity: 0.6;
+}
+
+.learn-more-btn:active,
+.whatsapp-btn:active {
+  transform: translateY(2px) scale(0.98);
+}
+
+/* ======================================================
+   CART TABLE – CLEAN STRUCTURE & MOTION
+====================================================== */
+
+.cart-table tbody tr {
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.cart-table tbody tr:hover {
+  background: #f8fbf8;
+  transform: scale(1.01);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+/* Remove button pop */
+.cart-table button:hover {
+  transform: scale(1.25) rotate(8deg);
+}
+
+/* ======================================================
+   CART CTA – ATTENTION WITHOUT ANNOYANCE
+====================================================== */
+
+.whatsapp-btn {
+  animation: ctaBreath 3.5s ease-in-out infinite;
+}
+
+@keyframes ctaBreath {
+  0%   { box-shadow: 0 10px 24px rgba(37,211,102,0.35); }
+  50%  { box-shadow: 0 16px 36px rgba(37,211,102,0.55); }
+  100% { box-shadow: 0 10px 24px rgba(37,211,102,0.35); }
+}
+
+/* ======================================================
+   MODALS – SMOOTHER ENTRY / EXIT
+====================================================== */
+
+.modal {
+  backdrop-filter: blur(6px);
+}
+
+.modal-content {
+  animation: modalFloatIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes modalFloatIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ======================================================
+   FOOTER FINISH
+====================================================== */
+
+footer {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* ======================================================
+   MOBILE – KEEP IT SMOOTH & LIGHT
+====================================================== */
+
+@media (max-width: 768px) {
+  .product-card:hover,
+  .variety-card:hover {
+    transform: none;
+  }
+
+  .products,
+  .about-section {
+    animation: none;
+  }
+}
+/* =====================================================
+   CART – MODERN E-COMMERCE STYLE
+===================================================== */
+
+/* Section container */
+.products.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Title refinement */
+.products.container h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+}
+
+/* Cart table base */
+.cart-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 18px;
+}
+
+/* Headings */
+.cart-table thead th {
+  text-align: left;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7a7a;
+  padding: 0 0.8rem 0.6rem;
+  border-bottom: none;
+}
+
+/* Rows as cards */
+.cart-table tbody tr {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.cart-table tbody tr:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.1);
+}
+
+/* Cells */
+.cart-table tbody td {
+  padding: 1.2rem 1rem;
+  vertical-align: middle;
+  font-size: 1rem;
+}
+
+/* Rounded row corners */
+.cart-table tbody td:first-child {
+  border-radius: 16px 0 0 16px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.cart-table tbody td:last-child {
+  border-radius: 0 16px 16px 0;
+}
+
+/* Variety text */
+.cart-table td:nth-child(2) {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* KG input – premium */
+.cart-table input[type="number"] {
+  width: 110px;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  border: 1.5px solid #d8d8d8;
+  font-size: 0.95rem;
+  text-align: center;
+  background: #fafafa;
+  transition: all 0.25s ease;
+}
+
+.cart-table input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(30,124,58,0.15);
+}
+
+/* Remove icon – modern destructive action */
+.cart-table button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff0f0;
+  border: none;
+  color: #e53935;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.cart-table button:hover {
+  background: #ffdcdc;
+  transform: scale(1.1);
+}
+
+/* Empty state */
+#emptyCartMsg {
+  margin-top: 3rem;
+  font-size: 1.05rem;
+  color: #777;
+}
+
+/* =====================================================
+   WHATSAPP CTA – PRIMARY ACTION
+===================================================== */
+
+.cart-actions {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.whatsapp-btn {
+  padding: 1rem 3.2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #25d366, #1ebe57);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 18px 40px rgba(37,211,102,0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.whatsapp-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 55px rgba(37,211,102,0.6);
+}
+
+.whatsapp-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 14px 34px rgba(37,211,102,0.45);
+}
+
+/* Mobile adaptation */
+@media (max-width: 768px) {
+  .cart-table thead {
+    display: none;
+  }
+
+  .cart-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    padding: 1rem;
+  }
+
+  .cart-table tbody td {
+    padding: 0.4rem 0;
+  }
+
+  .cart-table tbody td:first-child {
+    border-radius: 12px;
+  }
+}
+/* ===== LOGOUT BUTTON ===== */
+
+.logout-btn {
+  background: transparent;
+  border: 2px solid var(--primary-dark);
+  color: var(--primary-dark);
+  padding: 0.35rem 0.9rem;
+  margin-left: 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: var(--primary-dark);
+  color: #fff;
+}

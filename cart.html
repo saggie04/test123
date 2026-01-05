@@ -3,68 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tejas Agri Seeds - Home</title>
+  <title>Your Cart - Tejas Agri Seeds</title>
+
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ================= HEADER ================= -->
 <header>
   <div class="container header-container">
     <img src="images/logo.jpg" alt="Tejas Agri Seeds Logo" class="logo" />
-    <nav>
-  <!-- Hamburger icon (visible only on mobile) -->
-  <div class="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
 
-  <!-- Navigation links -->
-  <ul class="nav-links">
-    <li><a href="index.html" class="active">Home</a></li>
-    <li><a href="about.html">About Us</a></li>
-    <li><a href="vegetable-seeds.html">Vegetable Seeds</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-</nav>
+    <nav>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="vegetable-seeds.html">Vegetable Seeds</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
 
     <div class="nav-icons">
       <i class="fas fa-search"></i>
       <i class="fas fa-user" title="Login / Account"></i>
-      <i class="fas fa-shopping-cart" onclick="location.href='cart.html'"></i>
+      <i class="fas fa-shopping-cart"></i>
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
   </div>
 </header>
 
-<!-- HERO -->
+<!-- ================= HERO ================= -->
 <section class="hero">
   <div class="hero-content">
-    <h1>TEJAS AGRI SEEDS</h1>
-    <p>Growing with us for a better harvest.</p>
-    <a href="vegetable-seeds.html" class="learn-more-btn">Browse Vegetables</a>
+    <h1>Your Cart</h1>
+    <p>Review selected seed varieties before ordering.</p>
   </div>
 </section>
 
-<!-- ABOUT PREVIEW -->
+<!-- ================= CART SECTION ================= -->
 <section class="products container">
-  <h2>Welcome to Tejas Agri Seeds</h2>
-  <p style="max-width:700px; margin:0 auto; text-align:center;">
-    We provide high-quality, high-yield vegetable seeds trusted by farmers across India.
-    Our goal is to ensure sustainable growth, healthy crops, and prosperous harvests.
-  </p>
+  <h2>Your Cart</h2>
+
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Variety</th>
+        <th>KG</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody id="cartItems"></tbody>
+  </table>
+  <div class="cart-actions">
+  <button id="whatsappOrderBtn" class="whatsapp-btn">
+    Proceed to Buy on WhatsApp
+  </button>
+</div>
+
+
+  <p id="emptyCartMsg">Your cart is empty.</p>
 </section>
 
-<!-- FOOTER -->
+<!-- ================= FOOTER ================= -->
 <footer>
   <div class="container footer-container">
     <p>© 2025 Tejas Agri Seeds. All Rights Reserved.</p>
   </div>
 </footer>
 
-<!-- SEARCH & LOGIN MODALS -->
+<!-- ================= MODALS ================= -->
 <div id="searchModal" class="modal">
   <div class="modal-content">
     <button class="close-btn">&times;</button>
@@ -73,14 +88,14 @@
     <button class="learn-more-btn">Search</button>
   </div>
 </div>
-
-
 <script
   async
   crossorigin="anonymous"
   data-clerk-publishable-key="pk_test_c3VwZXJiLXRvYWQtNzAuY2xlcmsuYWNjb3VudHMuZGV2JA"
   src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@4/dist/clerk.browser.js">
 </script>
+
+
 
 
 

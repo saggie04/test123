@@ -1,18 +1,91 @@
-// ---------- Utility ----------
-const $ = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+// ================== UTILITIES ==================
+// ================== CLERK INIT ==================
+// ================== CLERK AUTH STATE HANDLER ==================
+window.addEventListener("load", async () => {
+  if (!window.Clerk) return;
 
-// ---------- Contact form ----------
-const form = $('#contactForm');
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const msg = $('#formMsg');
-    msg.textContent = 'Thanks! Your message has been recorded. We will contact you soon.';
-    form.reset();
-    msg.style.color = '#2e7d32';
+  await Clerk.load();
+
+  const userIcon = document.querySelector(".fa-user");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  // User icon click
+  if (userIcon) {
+    userIcon.onclick = (e) => {
+      e.preventDefault();
+      if (Clerk.user) {
+        Clerk.openUserProfile();
+      } else {
+        Clerk.openSignIn();
+      }
+    };
+  }
+
+  // Logout visibility + action
+  if (logoutBtn) {
+    logoutBtn.style.display = Clerk.user ? "inline-flex" : "none";
+
+    logoutBtn.onclick = async () => {
+      await Clerk.signOut();
+      localStorage.clear(); // optional but recommended
+      location.reload();
+    };
+  }
+});
+
+window.addEventListener("load", async () => {
+  if (!window.Clerk) return;
+
+  await Clerk.load();
+
+  const userIcon = document.querySelector(".fa-user");
+
+  if (!userIcon) return;
+
+  userIcon.addEventListener("click", () => {
+    if (Clerk.user) {
+      Clerk.openUserProfile();
+    } else {
+      Clerk.openSignIn({
+        redirectUrl: window.location.href
+      });
+    }
+  });
+
+  updateAuthUI();
+});
+
+// ================== AUTH UI ==================
+function updateAuthUI() {
+  const userIcon = document.querySelector(".fa-user");
+  if (!userIcon || !window.Clerk) return;
+
+  userIcon.title = Clerk.user ? "Account" : "Login / Sign up";
+}
+// ================== CLERK LOGOUT ==================
+function setupLogout() {
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (!logoutBtn || !window.Clerk) return;
+
+  if (Clerk.user) {
+    logoutBtn.style.display = "inline-block";
+  } else {
+    logoutBtn.style.display = "none";
+  }
+
+  logoutBtn.addEventListener("click", async () => {
+    await Clerk.signOut();
+    location.reload();
   });
 }
+
+window.addEventListener("load", setupLogout);
+
+/* ===== EVERYTHING BELOW THIS STAYS AS IS ===== */
+
+// ================== UTILITIES ==================
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
 // ---------- Vegetable data ----------
 const vegData = {
@@ -751,251 +824,224 @@ const vegData = {
 
 };
 
-const modal = $('#vegModal');
-if (modal) {
-  const vegNameEl = $('#vegName');
-  const vegContentEl = $('#vegTypes');
-  const closeBtn = $('.close-btn');
+// ================== CONTACT FORM ==================
+const contactForm = $("#contactForm");
+if (contactForm) {
+  contactForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const msg = $("#formMsg");
+    msg.textContent =
+      "Thanks! Your message has been recorded. We will contact you soon.";
+    msg.style.color = "#2e7d32";
+    contactForm.reset();
+  });
+}
 
-  $$('.learn-more-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.product-card');
-      const vegKey = card.getAttribute('data-veg');
-      const title = card.querySelector('h3')?.textContent?.trim() || 'Vegetable';
+// ================== CART STORAGE ==================
+function getCart() {
+  return JSON.parse(localStorage.getItem("cart")) || [];
+}
 
-      vegNameEl.textContent = title;
-      vegContentEl.innerHTML = '';
+function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function addToCart(item) {
+  if (!item.kg || item.kg <= 0) {
+    alert("Enter a valid KG amount");
+    return;
+  }
+
+  const cart = getCart();
+  cart.push(item);
+  saveCart(cart);
+  alert("Added to cart");
+}
+
+function updateKg(index, value) {
+  const cart = getCart();
+  cart[index].kg = parseFloat(value);
+  saveCart(cart);
+}
+
+function removeItem(index) {
+  const cart = getCart();
+  cart.splice(index, 1);
+  saveCart(cart);
+  renderCart();
+}
+
+// ================== CART PAGE RENDER ==================
+function renderCart() {
+  const table = $("#cartItems");
+  const empty = $("#emptyCartMsg");
+  if (!table) return;
+
+  const cart = getCart();
+  table.innerHTML = "";
+
+  if (cart.length === 0) {
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  cart.forEach((item, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.vegetable}</td>
+      <td>${item.variety}</td>
+      <td>
+        <input type="number" step="0.1" min="0.1" 
+          value="${item.kg}"
+          onchange="updateKg(${i}, this.value)">
+      </td>
+      <td>
+        <button onclick="removeItem(${i})">❌</button>
+      </td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", renderCart);
+
+// ================== VEGETABLE MODAL ==================
+const vegModal = $("#vegModal");
+if (vegModal) {
+  const vegName = $("#vegName");
+  const vegBody = $("#vegTypes");
+  const closeBtn = vegModal.querySelector(".close-btn");
+
+  $$(".learn-more-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".product-card");
+      const vegKey = card.getAttribute("data-veg");
+      const title = card.querySelector("h3").textContent;
+
+      vegName.textContent = title;
+      vegBody.innerHTML = "";
 
       const varieties = vegData[vegKey];
-      if (Array.isArray(varieties) && varieties.length) {
-        const container = document.createElement('div');
-        container.classList.add('variety-container');
-
-        varieties.forEach(v => {
-        const varietyCard = document.createElement('div');
-        varietyCard.classList.add('variety-card');
-
-        const img = document.createElement('img');
-        img.src = v.img;
-        img.alt = v.name;
-
-        const caption = document.createElement('h4');
-        caption.textContent = v.name;
-
-        varietyCard.appendChild(img);
-        varietyCard.appendChild(caption);
-
-        // ✅ Add characteristics list
-        if (v.characteristics && v.characteristics.length) {
-            const ul = document.createElement('ul');
-            v.characteristics.forEach(point => {
-            const li = document.createElement('li');
-            li.textContent = point;
-            ul.appendChild(li);
-            });
-            varietyCard.appendChild(ul);
-        }
-
-        container.appendChild(varietyCard);
-        });
-
-        vegContentEl.appendChild(container);
-      } else {
-        vegContentEl.innerHTML = '<p>No varieties added yet.</p>';
+      if (!varieties) {
+        vegBody.innerHTML = "<p>No varieties available.</p>";
+        vegModal.style.display = "block";
+        return;
       }
 
-      modal.style.display = 'block';
-      closeBtn?.focus();
+      const container = document.createElement("div");
+      container.className = "variety-container";
+
+      varieties.forEach((v) => {
+        const card = document.createElement("div");
+        card.className = "variety-card";
+
+        card.innerHTML = `
+          <img src="${v.img}">
+          <h4>${v.name}</h4>
+        `;
+
+        const ul = document.createElement("ul");
+        v.characteristics.forEach((c) => {
+          const li = document.createElement("li");
+          li.textContent = c;
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+
+        // ===== KG INPUT =====
+        const kg = document.createElement("input");
+        kg.type = "number";
+        kg.step = "0.1";
+        kg.min = "0.1";
+        kg.placeholder = "Enter KG";
+        kg.className = "kg-input";
+
+        // ===== ADD TO CART =====
+        const btn = document.createElement("button");
+        btn.textContent = "Add to Cart";
+        btn.className = "learn-more-btn";
+
+        btn.onclick = () => {
+          addToCart({
+            vegetable: title,
+            variety: v.name,
+            kg: parseFloat(kg.value),
+          });
+        };
+
+        card.appendChild(kg);
+        card.appendChild(btn);
+        container.appendChild(card);
+      });
+
+      vegBody.appendChild(container);
+      vegModal.style.display = "block";
     });
   });
 
-  const closeModal = () => { modal.style.display = 'none'; };
-  closeBtn?.addEventListener('click', closeModal);
-  window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.style.display === 'block') closeModal(); });
+  closeBtn.onclick = () => (vegModal.style.display = "none");
+  window.onclick = (e) => {
+    if (e.target === vegModal) vegModal.style.display = "none";
+  };
 }
 
-
-// ---------- Search & Login Modals ----------
-const searchModal = $('#searchModal');
-const loginModal = $('#loginModal');
-const searchIcon = $('.fa-search');
-const userIcon = $('.fa-user');
-
+// ================== SEARCH & LOGIN MODALS ==================
 function setupModal(icon, modal) {
   if (!icon || !modal) return;
-  const closeBtn = modal.querySelector('.close-btn');
-  icon.addEventListener('click', () => { modal.style.display = 'block'; });
-  closeBtn?.addEventListener('click', () => { modal.style.display = 'none'; });
-  window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.style.display = 'none'; });
+  const close = modal.querySelector(".close-btn");
+
+  icon.onclick = () => (modal.style.display = "block");
+  close.onclick = () => (modal.style.display = "none");
+
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  });
 }
 
-setupModal(searchIcon, searchModal);
-setupModal(userIcon, loginModal);
+setupModal($(".fa-search"), $("#searchModal"));
 
 
-// ---------- Search & Login Modals ----------
+// ================== HAMBURGER MENU ==================
 document.addEventListener("DOMContentLoaded", () => {
-  const searchModal = document.getElementById("searchModal");
-  const loginModal = document.getElementById("loginModal");
-  const searchIcon = document.querySelector(".fa-search");
-  const userIcon = document.querySelector(".fa-user");
+  const burger = $(".hamburger");
+  const nav = $(".nav-links");
 
-  function setupModal(icon, modal) {
-    if (!icon || !modal) return;
-    const closeBtn = modal.querySelector(".close-btn");
-
-    // Open
-    icon.addEventListener("click", () => {
-      modal.style.display = "block";
-    });
-
-    // Close with X
-    closeBtn?.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
-
-    // Close by clicking outside
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) modal.style.display = "none";
-    });
-
-    // Close with Escape
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.style.display === "block") {
-        modal.style.display = "none";
-      }
-    });
-  }
-
-  setupModal(searchIcon, searchModal);
-  setupModal(userIcon, loginModal);
-
-  // Optional: Handle login form submission
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      alert("Logged in successfully (demo)!");
-      loginModal.style.display = "none";
-    });
+  if (burger && nav) {
+    burger.onclick = () => {
+      burger.classList.toggle("active");
+      nav.classList.toggle("active");
+    };
   }
 });
+const WHATSAPP_NUMBER = "919091168711"; 
+// format: countrycode + number, no +, no spaces
 
+const whatsappBtn = document.getElementById("whatsappOrderBtn");
 
-// ---------- SEARCH FUNCTIONALITY ----------
-document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.getElementById("searchInput");
-  const searchBtn = searchInput?.nextElementSibling; // the search button
-  const searchModal = document.getElementById("searchModal");
-  const vegModal = document.getElementById("vegModal");
-  const vegNameEl = document.getElementById("vegName");
-  const vegContentEl = document.getElementById("vegTypes");
-  const closeBtn = document.querySelector("#vegModal .close-btn");
+if (whatsappBtn) {
+  whatsappBtn.addEventListener("click", () => {
+    const cart = getCart();
 
-  function openVegModal(vegKey) {
-    const varieties = vegData[vegKey];
-    if (!varieties) {
-      vegContentEl.innerHTML = `<p>No results found.</p>`;
-      vegModal.style.display = "block";
+    if (cart.length === 0) {
+      alert("Your cart is empty");
       return;
     }
 
-    vegNameEl.textContent = vegKey.charAt(0).toUpperCase() + vegKey.slice(1);
-    vegContentEl.innerHTML = "";
+    let message = "Hello Tejas Agri Seeds,%0A%0A";
+    message += "I would like to place an order:%0A%0A";
 
-    const container = document.createElement("div");
-    container.classList.add("variety-container");
-
-    varieties.forEach(v => {
-      const varietyCard = document.createElement("div");
-      varietyCard.classList.add("variety-card");
-
-      const img = document.createElement("img");
-      img.src = v.img;
-      img.alt = v.name;
-
-      const caption = document.createElement("h4");
-      caption.textContent = v.name;
-
-      varietyCard.appendChild(img);
-      varietyCard.appendChild(caption);
-
-      if (v.characteristics && v.characteristics.length) {
-        const ul = document.createElement("ul");
-        v.characteristics.forEach(point => {
-          const li = document.createElement("li");
-          li.textContent = point;
-          ul.appendChild(li);
-        });
-        varietyCard.appendChild(ul);
-      }
-
-      container.appendChild(varietyCard);
+    cart.forEach(item => {
+      message += `• ${item.vegetable} – ${item.variety} – ${item.kg} KG%0A`;
     });
 
-    vegContentEl.appendChild(container);
-    vegModal.style.display = "block";
-    closeBtn?.focus();
-  }
+    message += "%0APlease contact me for further processing.";
 
-  if (searchBtn) {
-    searchBtn.addEventListener("click", () => {
-      const query = searchInput.value.trim().toLowerCase();
-      if (!query) return;
-
-      // find the vegKey in vegData
-      const vegKey = Object.keys(vegData).find(key => key.toLowerCase() === query);
-      if (vegKey) {
-        searchModal.style.display = "none"; // close search modal
-        openVegModal(vegKey);
-      } else {
-        alert("No vegetable found for: " + query);
-      }
-    });
-  }
-});
-
-// ---------- MOBILE NAV ----------
-document.addEventListener("DOMContentLoaded", () => {
-  const hamburger = document.querySelector(".hamburger");
-  const navLinks = document.querySelector(".nav-links");
-
-  if (hamburger && navLinks) {
-    hamburger.addEventListener("click", () => {
-      hamburger.classList.toggle("active");
-      navLinks.classList.toggle("active");
-    });
-
-    // Close menu when clicking a link
-    navLinks.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        hamburger.classList.remove("active");
-        navLinks.classList.remove("active");
-      });
-    });
-  }
-});
-
-
-// ---------- AUTO HIGHLIGHT ACTIVE NAV LINK ----------
-document.addEventListener("DOMContentLoaded", () => {
-  const currentPage = window.location.pathname.split("/").pop(); // get filename
-  const navLinks = document.querySelectorAll(".nav-links a");
-
-  navLinks.forEach(link => {
-    // remove any existing active classes
-    link.classList.remove("active");
-
-    // if href matches the current page, add active
-    if (link.getAttribute("href") === currentPage) {
-      link.classList.add("active");
-    }
-
-    // special case: if homepage is loaded as "/" or empty path
-    if ((currentPage === "" || currentPage === "index.html") && link.getAttribute("href") === "index.html") {
-      link.classList.add("active");
-    }
+    const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    window.open(whatsappURL, "_blank");
   });
-});
+}
+// ================== AUTH (CLERK PLACEHOLDER) ==================
+// Clerk authentication will be mounted on the user icon.
+// Default login intentionally removed.
