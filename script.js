@@ -1045,3 +1045,150 @@ if (whatsappBtn) {
 // ================== AUTH (CLERK PLACEHOLDER) ==================
 // Clerk authentication will be mounted on the user icon.
 // Default login intentionally removed.
+window.addEventListener("load", async () => {
+  if (!window.Clerk) return;
+
+  await Clerk.load();
+
+  const userIcon = document.querySelector(".fa-user");
+
+  if (!userIcon) return;
+
+  userIcon.onclick = () => {
+    if (Clerk.user) {
+      window.location.href = "account.html";
+    } else {
+      Clerk.openSignIn({
+        redirectUrl: window.location.href
+      });
+    }
+  };
+});
+// Account tab switching
+document.querySelectorAll(".account-menu button[data-tab]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document
+      .querySelectorAll(".account-menu button")
+      .forEach(b => b.classList.remove("active"));
+
+    document
+      .querySelectorAll(".tab")
+      .forEach(t => t.classList.remove("active"));
+
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+function loadProfile() {
+  const profileDiv = document.getElementById("profile");
+
+  const savedProfile =
+    JSON.parse(localStorage.getItem("userProfile")) || {};
+
+  profileDiv.innerHTML = `
+    <h3>My Profile</h3>
+
+    <label>Name</label>
+    <input id="profileName" value="${savedProfile.name || ""}" />
+
+    <label>Email</label>
+    <input id="profileEmail" value="${savedProfile.email || ""}" />
+
+    <label>Phone</label>
+    <input id="profilePhone" value="${savedProfile.phone || ""}" />
+
+    <button class="learn-more-btn" onclick="saveProfile()">
+      Save Changes
+    </button>
+  `;
+}
+
+function saveProfile() {
+  const profile = {
+    name: document.getElementById("profileName").value,
+    email: document.getElementById("profileEmail").value,
+    phone: document.getElementById("profilePhone").value,
+  };
+
+  localStorage.setItem("userProfile", JSON.stringify(profile));
+  alert("Profile saved");
+}
+function loadAddresses() {
+  const addrDiv = document.getElementById("addresses");
+  const addresses =
+    JSON.parse(localStorage.getItem("addresses")) || [];
+
+  addrDiv.innerHTML = `
+    <h3>My Addresses</h3>
+
+    <input id="addrLine" placeholder="Address line" />
+    <input id="addrCity" placeholder="City" />
+    <input id="addrState" placeholder="State" />
+    <input id="addrPin" placeholder="Pincode" />
+
+    <button class="learn-more-btn" onclick="addAddress()">Add Address</button>
+
+    <div class="address-list">
+      ${addresses
+        .map(
+          (a, i) => `
+          <div class="address-card">
+            <p>${a.line}, ${a.city}, ${a.state} - ${a.pin}</p>
+            <button onclick="deleteAddress(${i})">Delete</button>
+          </div>`
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function addAddress() {
+  const addresses =
+    JSON.parse(localStorage.getItem("addresses")) || [];
+
+  addresses.push({
+    line: addrLine.value,
+    city: addrCity.value,
+    state: addrState.value,
+    pin: addrPin.value,
+  });
+
+  localStorage.setItem("addresses", JSON.stringify(addresses));
+  loadAddresses();
+}
+
+function deleteAddress(index) {
+  const addresses =
+    JSON.parse(localStorage.getItem("addresses")) || [];
+
+  addresses.splice(index, 1);
+  localStorage.setItem("addresses", JSON.stringify(addresses));
+  loadAddresses();
+}
+function loadOrders() {
+  const ordersDiv = document.getElementById("orders");
+
+  const orders =
+    JSON.parse(localStorage.getItem("orders")) || [
+      {
+        id: "ORD123",
+        items: "Tomato (2kg), Chilli (1kg)",
+        status: "Delivered",
+      },
+    ];
+
+  ordersDiv.innerHTML = `
+    <h3>My Orders</h3>
+
+    ${orders
+      .map(
+        o => `
+        <div class="order-card">
+          <p><strong>Order ID:</strong> ${o.id}</p>
+          <p>${o.items}</p>
+          <p>Status: <b>${o.status}</b></p>
+        </div>`
+      )
+      .join("")}
+  `;
+}

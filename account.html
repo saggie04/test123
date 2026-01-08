@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account - Tejas Agri Seeds</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- CLERK -->
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_c3VwZXJiLXRvYWQtNzAuY2xlcmsuYWNjb3VudHMuZGV2JA"
+    src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@4/dist/clerk.browser.js">
+  </script>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container header-container">
+    <img src="images/logo.jpg" class="logo" />
+    <nav>
+      <div class="hamburger"><span></span><span></span><span></span></div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="vegetable-seeds.html">Vegetable Seeds</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-icons">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-user" title="Login / Account"></i>
+      <i class="fas fa-shopping-cart" onclick="location.href='cart.html'"></i>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>My Account</h1>
+    <p>Manage your profile, addresses and orders</p>
+  </div>
+</section>
+
+<!-- ACCOUNT -->
+<section class="products container">
+  <div class="account-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="account-menu">
+      <button class="active" data-tab="profile">My Profile</button>
+      <button data-tab="addresses">My Addresses</button>
+      <button data-tab="orders">My Orders</button>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="account-content">
+
+      <!-- PROFILE -->
+      <div id="profile" class="tab active">
+        <h3>My Profile</h3>
+
+        <label>Name</label>
+        <input id="profileName" placeholder="Enter name" />
+
+        <label>Email</label>
+        <input id="profileEmail" placeholder="Enter email" />
+
+        <label>Phone</label>
+        <input id="profilePhone" placeholder="Enter phone" />
+
+        <button class="learn-more-btn" onclick="saveProfile()">Save Profile</button>
+      </div>
+
+      <!-- ADDRESSES -->
+      <div id="addresses" class="tab">
+        <h3>My Addresses</h3>
+
+        <input id="addrLine" placeholder="Address line" />
+        <input id="addrCity" placeholder="City" />
+        <input id="addrState" placeholder="State" />
+        <input id="addrPin" placeholder="Pincode" />
+
+        <button class="learn-more-btn" onclick="addAddress()">Add Address</button>
+
+        <div id="addressList"></div>
+      </div>
+
+      <!-- ORDERS -->
+      <div id="orders" class="tab">
+        <h3>My Orders</h3>
+        <div id="orderList"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-container">
+    <p>© 2025 Tejas Agri Seeds. All Rights Reserved.</p>
+  </div>
+</footer>
+<!-- SEARCH MODAL -->
+<div id="searchModal" class="modal">
+  <div class="modal-content">
+    <button class="close-btn">&times;</button>
+    <h2>Search</h2>
+    <input type="text" id="searchInput" placeholder="Search for vegetables..." />
+    <button class="learn-more-btn">Search</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+/* ---------- CLERK PROTECTION ---------- */
+window.addEventListener("load", async () => {
+  await Clerk.load();
+  if (!Clerk.user) location.href = "index.html";
+
+  document.getElementById("logoutBtn").onclick = async () => {
+    await Clerk.signOut();
+    location.href = "index.html";
+  };
+});
+
+/* ---------- TAB SWITCH ---------- */
+document.querySelectorAll(".account-menu button").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".account-menu button").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  };
+});
+
+/* ---------- PROFILE ---------- */
+function saveProfile() {
+  localStorage.setItem("profile", JSON.stringify({
+    name: profileName.value,
+    email: profileEmail.value,
+    phone: profilePhone.value
+  }));
+  alert("Profile saved");
+}
+
+(function loadProfile() {
+  const p = JSON.parse(localStorage.getItem("profile"));
+  if (!p) return;
+  profileName.value = p.name;
+  profileEmail.value = p.email;
+  profilePhone.value = p.phone;
+})();
+
+/* ---------- ADDRESSES ---------- */
+function addAddress() {
+  const list = JSON.parse(localStorage.getItem("addresses")) || [];
+  list.push({
+    line: addrLine.value,
+    city: addrCity.value,
+    state: addrState.value,
+    pin: addrPin.value
+  });
+  localStorage.setItem("addresses", JSON.stringify(list));
+  renderAddresses();
+}
+
+function renderAddresses() {
+  const list = JSON.parse(localStorage.getItem("addresses")) || [];
+  addressList.innerHTML = list.map((a,i)=>`
+    <div class="address-card">
+      ${a.line}, ${a.city}, ${a.state} - ${a.pin}
+      <button onclick="deleteAddress(${i})">Delete</button>
+    </div>
+  `).join("");
+}
+
+function deleteAddress(i) {
+  const list = JSON.parse(localStorage.getItem("addresses"));
+  list.splice(i,1);
+  localStorage.setItem("addresses", JSON.stringify(list));
+  renderAddresses();
+}
+renderAddresses();
+
+/* ---------- ORDERS ---------- */
+/* ---------- ORDERS ---------- */
+(function loadOrders(){
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  if (orders.length === 0) {
+    orderList.innerHTML = `
+      <p style="color:#777; margin-top:10px;">
+        You haven’t placed any orders yet.
+      </p>
+    `;
+    return;
+  }
+
+  orderList.innerHTML = orders.map(o => `
+    <div class="order-card">
+      Order <b>${o.id}</b> — ${o.status}
+    </div>
+  `).join("");
+})();
+
+</script>
+
+</body>
+</html>
